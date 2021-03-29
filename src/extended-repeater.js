@@ -1,22 +1,17 @@
 const CustomError = require("../extensions/custom-error");
 
 module.exports = function repeater(str, options) {
-  let result = [];
+  let separatorStr = options.additionRepeatTimes ? '' : options.addition ? options.addition : '';
+  let separator = options.separator ? options.separator : '+';
+  let result = '';
 
-  if (options.separator == undefined) options.separator = "+";
-  if (options.addition == null) options.addition = "null";
-  if (options.addition === undefined) options.addition = "";
-  if (options.additionSeparator == undefined) options.additionSeparator == "";
-  if (options.repeatTimes == undefined) options.repeatTimes = 1;
-  if (options.additionRepeatTimes == undefined) options.additionRepeatTimes = 1;
-
+  for (let i = 0; i < options.additionRepeatTimes; i++) {
+    const additionSeparator = options.additionSeparator ? options.additionSeparator : '|';
+    separatorStr += options.addition + i < options.additionRepeatTimes - 1 ? additionSeparator : '';
+  }
   for (let i = 0; i < options.repeatTimes; i++) {
-    let trialString = [];
-    for (let j = 0; j < options.additionRepeatTimes; j++) {
-      trialString.push(options.addition);
-    }
-    result.push(str + trialString.join(options.additionSeparator));
+    result += str + ' ' separatorStr + ' ' + i < options.repeatTimes - 1 ? separator : '';
   }
 
-  return result.join(options.separator);
+  return result ? result : str + options.addition;
 };
