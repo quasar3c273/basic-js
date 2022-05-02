@@ -19,14 +19,44 @@ const { NotImplementedError } = require('../extensions/index.js');
  * reverseMachine.decrypt('AEIHQX SX DLLU!', 'alphonse') => '!NWAD TA KCATTA'
  * 
  */
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 class VigenereCipheringMachine {
-  encrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  constructor(status = true) {
+    this.status = status;
   }
-  decrypt() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+
+  encrypt(message, key) {
+    if (!message || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+    const letters = alphabet.split('');
+    message = message.toUpperCase().split('');
+    key = key.toUpperCase().split('');
+    let j = 0;
+    for (let i = 0; i < message.length; i++) {
+      if (letters.indexOf(message[i]) != -1) {
+        message[i] = letters[(letters.indexOf(message[i]) + letters.indexOf(key[j])) % letters.length];
+        j = ++j % key.length;
+      }
+    }
+    return (this.status) ? message.join('') : message.reverse().join('');
+  }
+
+  decrypt(encryptedMessage, key) {
+    if (!encryptedMessage || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+    encryptedMessage = encryptedMessage.toUpperCase().split('');
+    key = key.toUpperCase().split('');
+    let j = 0;
+    for (let i = 0; i < encryptedMessage.length; i++) {
+      if (alphabet.indexOf(encryptedMessage[i]) != -1) {
+        encryptedMessage[i] = alphabet[(alphabet.indexOf(encryptedMessage[i]) + alphabet.length - alphabet.indexOf(key[j])) % alphabet.length];
+        j = ++j % key.length;
+      }
+    }
+    return (this.status) ? encryptedMessage.join('') : encryptedMessage.reverse().join('');
   }
 }
 
